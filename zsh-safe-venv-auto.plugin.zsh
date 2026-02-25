@@ -97,4 +97,9 @@ else
 fi
 
 # Run the chpwd function when the shell starts
-chpwd
+# Suppress output on initial load to avoid interfering with instant prompt
+if [[ -o interactive ]]; then
+    {
+        chpwd
+    } &>/dev/null
+fi
