@@ -102,7 +102,7 @@ $ cd ..
 
 ## Configuration
 
-Configuration is stored in `~/.config/venv-security/config.json`:
+Configuration is stored in `~/.config/zsh-safe-venv-auto/config.json`:
 
 ```json
 {

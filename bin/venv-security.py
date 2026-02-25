@@ -18,7 +18,7 @@ import json
 import sys
 from pathlib import Path
 
-CONFIG_DIR = Path.home() / ".config" / "venv-security"
+CONFIG_DIR = Path.home() / ".config" / "zsh-safe-venv-auto"
 CONFIG_FILE = CONFIG_DIR / "config.json"
 
 
