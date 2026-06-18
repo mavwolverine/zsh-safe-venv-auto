@@ -67,8 +67,8 @@ function _safe_chpwd() {
 
             # Security check: only activate trusted venvs
             if _venv_security_check "$normalized_venv_path"; then
-                source "$venv_path/bin/activate"
-                local project_name=$(basename "$(dirname "$venv_path")")
+                source "$normalized_venv_path/bin/activate"
+                local project_name=$(basename "$(dirname "$normalized_venv_path")")
                 echo "🐍 Activated virtual environment \033[95m$project_name\033[0m."
             fi
         fi
