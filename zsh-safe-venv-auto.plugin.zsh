@@ -28,7 +28,7 @@ _venv_security_check() {
 }
 
 # Auto-activate virtual environment for any project with a venv directory
-function chpwd() {
+function _safe_chpwd() {
     # Function to find venv directory in current path or parent directories
     # Prefers 'venv' over '.venv' if both exist
     local find_venv() {
@@ -95,10 +95,13 @@ else
     alias vnvsec="echo 'Error: Python not found. Cannot manage venv security.'"
 fi
 
-# Run the chpwd function when the shell starts
-# Suppress output on initial load to avoid interfering with instant prompt
+# Register chpwd hook (doesn't override other plugins' chpwd hooks)
+autoload -Uz add-zsh-hook
+add-zsh-hook chpwd _safe_chpwd
+
+# Run on shell start; only activates already-trusted venvs silently
 if [[ -o interactive ]]; then
     {
-        chpwd
+        _safe_chpwd
     } &>/dev/null
 fi
