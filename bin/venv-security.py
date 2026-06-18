@@ -62,12 +62,14 @@ def check_venv(venv_path: str) -> int:
         return 1
 
     if response in ("y", "yes"):
-        config["trusted"].append(path)
+        if path not in config["trusted"]:
+            config["trusted"].append(path)
         save_config(config)
         print(f"✓ Added to trusted list")
         return 0
     elif response in ("b", "block"):
-        config["blocked"].append(path)
+        if path not in config["blocked"]:
+            config["blocked"].append(path)
         save_config(config)
         print(f"✗ Added to blocked list (won't ask again)")
         return 1
