@@ -29,25 +29,20 @@ _venv_security_check() {
 
 # Auto-activate virtual environment for any project with a venv directory
 function _safe_chpwd() {
-    # Function to find venv directory in current path or parent directories
+    # Find venv directory in current path or parent directories
     # Prefers 'venv' over '.venv' if both exist
-    local find_venv() {
-        local dir="$PWD"
-        while [[ "$dir" != "/" ]]; do
-            if [[ -d "$dir/venv" && -f "$dir/venv/bin/activate" ]]; then
-                echo "$dir/venv"
-                return 0
-            elif [[ -d "$dir/.venv" && -f "$dir/.venv/bin/activate" ]]; then
-                echo "$dir/.venv"
-                return 0
-            fi
-            dir="$(dirname "$dir")"
-        done
-        return 1
-    }
-
-    local venv_path
-    venv_path=$(find_venv)
+    local venv_path=""
+    local dir="$PWD"
+    while [[ "$dir" != "/" ]]; do
+        if [[ -d "$dir/venv" && -f "$dir/venv/bin/activate" ]]; then
+            venv_path="$dir/venv"
+            break
+        elif [[ -d "$dir/.venv" && -f "$dir/.venv/bin/activate" ]]; then
+            venv_path="$dir/.venv"
+            break
+        fi
+        dir="$(dirname "$dir")"
+    done
 
     if [[ -n "$venv_path" ]]; then
         # Normalize paths for comparison (handles symlinks and path differences)
