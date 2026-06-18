@@ -64,7 +64,7 @@ function _safe_chpwd() {
             if _venv_security_check "$normalized_venv_path"; then
                 source "$normalized_venv_path/bin/activate"
                 local project_name=$(basename "$(dirname "$normalized_venv_path")")
-                echo "🐍 Activated virtual environment \033[95m$project_name\033[0m."
+                print "🐍 Activated virtual environment \e[95m$project_name\e[0m."
             fi
         fi
     else
@@ -72,7 +72,7 @@ function _safe_chpwd() {
         if [[ -n "${VIRTUAL_ENV:-}" ]] && type deactivate >/dev/null 2>&1; then
             local project_name=$(basename "$(dirname "${VIRTUAL_ENV}")")
             deactivate
-            echo "🔒 Deactivated virtual environment \033[95m$project_name\033[0m."
+            print "🔒 Deactivated virtual environment \e[95m$project_name\e[0m."
         elif [[ -n "${VIRTUAL_ENV:-}" ]]; then
             # VIRTUAL_ENV is set but deactivate function is not available
             # This can happen when opening a new shell with VIRTUAL_ENV from previous session
