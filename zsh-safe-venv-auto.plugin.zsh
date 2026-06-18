@@ -4,28 +4,27 @@
 # when changing directories
 # See full write up at https://mkennedy.codes/posts/always-activate-the-venv-a-shell-script/
 
-# Get plugin directory
-local PLUGIN_DIR="${0:A:h}"
-local SECURITY_SCRIPT="${PLUGIN_DIR}/bin/venv-security.py"
-
-# Check for Python availability
-local PYTHON_CMD=""
+# Plugin configuration (single global associative array)
+typeset -gA _SAFE_VENV
+_SAFE_VENV[plugin_dir]="${0:A:h}"
+_SAFE_VENV[security_script]="${_SAFE_VENV[plugin_dir]}/bin/venv-security.py"
+_SAFE_VENV[python_cmd]=""
 if command -v python3 >/dev/null 2>&1; then
-    PYTHON_CMD="python3"
+    _SAFE_VENV[python_cmd]="python3"
 elif command -v python >/dev/null 2>&1; then
-    PYTHON_CMD="python"
+    _SAFE_VENV[python_cmd]="python"
 fi
 
 # Security check function
 _venv_security_check() {
     local venv_path="$1"
     
-    if [[ -z "$PYTHON_CMD" ]]; then
+    if [[ -z "${_SAFE_VENV[python_cmd]}" ]]; then
         echo "⚠️  Warning: Python not found. Security checks disabled."
         return 0  # Fail open - allow activation without security
     fi
     
-    "$PYTHON_CMD" "$SECURITY_SCRIPT" check "$venv_path"
+    "${_SAFE_VENV[python_cmd]}" "${_SAFE_VENV[security_script]}" check "$venv_path"
 }
 
 # Auto-activate virtual environment for any project with a venv directory
@@ -88,9 +87,9 @@ function chpwd() {
 }
 
 # Venv security management aliases
-if [[ -n "$PYTHON_CMD" ]]; then
-    alias venv-security="$PYTHON_CMD $SECURITY_SCRIPT"
-    alias vnvsec="$PYTHON_CMD $SECURITY_SCRIPT"
+if [[ -n "${_SAFE_VENV[python_cmd]}" ]]; then
+    alias venv-security="${_SAFE_VENV[python_cmd]} ${_SAFE_VENV[security_script]}"
+    alias vnvsec="${_SAFE_VENV[python_cmd]} ${_SAFE_VENV[security_script]}"
 else
     alias venv-security="echo 'Error: Python not found. Cannot manage venv security.'"
     alias vnvsec="echo 'Error: Python not found. Cannot manage venv security.'"
